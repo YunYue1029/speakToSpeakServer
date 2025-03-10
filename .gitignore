@@ -1,5 +1,7 @@
 voice/
 outputV/
+testPDF/
+testPDFText/
 .env
 .DS_Store
 node_modules/
