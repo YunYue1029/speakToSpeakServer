@@ -6,6 +6,7 @@ import gptRoutes from "./routes/gptRoutes";
 import whisperRoutes from "./routes/whisperRoutes";
 import wordCompareRoutes from "./routes/wordCompare";
 import textToSpeachRoutes from "./routes/textToSpeach";
+import audioToGptRoutes from "./routes/audioToGptRoutes";
 
 dotenv.config();
 
@@ -23,6 +24,7 @@ app.use("/api/gpt", gptRoutes);
 app.use("/api/whisper", whisperRoutes);
 app.use("/api/wordCompare", wordCompareRoutes);
 app.use("/api/textToSpeach", textToSpeachRoutes);
+app.use("/api/audioToGpt", audioToGptRoutes);
 
 if (process.env.NODE_ENV !== "test") {
   app.listen(PORT, () => {

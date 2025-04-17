@@ -13,7 +13,7 @@ const openai = new OpenAI({
 
 router.get("/whisper", async (req, res) => {
     try {
-      const audioFilePath = "./test.wav";
+      const audioFilePath = "./voice/test.mp3";
   
       if (!fs.existsSync(audioFilePath)) {
         console.error("❌ 錯誤：找不到音檔，請確認檔案路徑是否正確");
