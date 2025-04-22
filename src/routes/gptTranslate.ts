@@ -9,6 +9,34 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
+router.get("/", async (req, res) => {
+  res.send("gptRoutes");
+});
+
+router.post("/translateToEnglish", async (req, res) => {
+  try {
+    const chineseSpeech = req.body.chineseSpeech;
+    const prompt = "請將以下中文演講稿翻譯成英文，風格口語化、自然流暢，適合在報告中口說使用，不要過於書面化。可以根據英文語感略作調整，使內容在英文中聽起來更順暢。整體長度控制在 90 秒內，不需要加上說明或結尾，只輸出翻譯後的英文講稿即可。以下是中文稿：「"+ chineseSpeech +"」";
+
+    const response = await openai.chat.completions.create({
+      model: "gpt-4o-mini",
+      messages: [
+        { role: "system", content: "我是一位研究者，目標是讓講稿內容自然流暢、專業清晰，適合在簡報中口語表達。" },
+        { role: "user", content: prompt }
+      ],
+      temperature: 0.7,
+    });
+    res.json({
+      reply : response.choices[0]?.message?.content
+    });
+    return;
+  } catch (error) {
+    console.error("❌ GPT API 請求錯誤:", error);
+    res.status(500).json({ error: "GPT API 發生錯誤" });
+  }
+});
+
+// not prefer to use
 router.post("/noSpeechWithImg", async (req, res) => {
   try {
     const { model, userinfo, prompt, imageUrl, temperature } = req.body;

@@ -2,11 +2,12 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 //router
-import gptRoutes from "./routes/gptRoutes";
-import whisperRoutes from "./routes/whisperRoutes";
-import wordCompareRoutes from "./routes/wordCompare";
+import gptRoutes from "./routes/gptTranslate";
+//import whisperRoutes from "./routes/whisperRoutes";
+//import wordCompareRoutes from "./routes/wordCompare";
 import textToSpeachRoutes from "./routes/textToSpeach";
-import audioToGptRoutes from "./routes/audioToGptRoutes";
+//import audioToGptRoutes from "./routes/audioToGptRoutes";
+import agentRoutes from "./routes/agent";
 
 dotenv.config();
 
@@ -20,11 +21,12 @@ app.get("/", (req, res) => {
   res.send("Express + TypeScript Server is running!");
 });
 
-app.use("/api/gpt", gptRoutes);
-app.use("/api/whisper", whisperRoutes);
-app.use("/api/wordCompare", wordCompareRoutes);
-app.use("/api/textToSpeach", textToSpeachRoutes);
-app.use("/api/audioToGpt", audioToGptRoutes);
+app.use("/api/gptTranslate", gptRoutes);
+//app.use("/api/whisper", whisperRoutes);
+//app.use("/api/wordCompare", wordCompareRoutes);
+app.use("/api/TTS", textToSpeachRoutes);
+//app.use("/api/audioToGpt", audioToGptRoutes);
+app.use("/api/agent", agentRoutes);
 
 if (process.env.NODE_ENV !== "test") {
   app.listen(PORT, () => {
