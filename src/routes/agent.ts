@@ -31,9 +31,10 @@ router.post('/agent', async (req, res) => {
 
 router.get('/test', async (req, res) => {
     try{
+        let finalResponse;
         let messages: ChatCompletionMessageParam[] = [
             { role: "system", content: "你是一個英文老師，可以根據需求使用多種工具（文法檢查、句子比較等等）幫助學生。" },
-            { role: "user", content: "學生的音檔是```user_audio/MCP_introduction.wav```" }
+            { role: "user", content: "學生音檔為```user_audio/MCP_introduction.wav```" }
           ];
           
           while (true) {
@@ -77,11 +78,22 @@ router.get('/test', async (req, res) => {
           
             // 🔚 GPT 回完最終回答
             messages.push(message);
+            // 加入最後要總結的任務說明
+            messages.push({
+                role: "user",
+                content: "請根據以上所有工具分析結果與對話，使用繁體中文做出整理與建議，並用 JSON 格式輸出。"
+            });
+            
+            // 呼叫最後總結
+            finalResponse = await openai.chat.completions.create({
+                model: "gpt-4",
+                messages
+            });
             break;
           }
           
-          // messages 最後就有 GPT 完整處理完所有 tool call 的回覆
-          res.json({ reply: messages });
+          res.json({ reply: finalResponse.choices[0].message });
+          return;
     }catch(error){
         console.error("❌ agent API 測試錯誤:", error);
         res.status(500).json({ error: "agent API 測試失敗" });
