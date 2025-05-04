@@ -2,7 +2,9 @@ voice/
 outputV/
 testPDF/
 testPDFText/
+upload/
 .env
 .DS_Store
 prompt.txt
 .gitignore
+public/
