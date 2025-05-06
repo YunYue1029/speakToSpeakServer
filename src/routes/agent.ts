@@ -26,6 +26,7 @@ const upload = multer({ storage });
 router.post('/audioTest', upload.single("file"), async (req, res) => {
     try {
         const file = req.file;
+        const inputText = req.body.inputText;
         if (!file) {
             res.status(400).json({ error: "沒有上傳音檔" });
             return;
@@ -47,9 +48,9 @@ router.post('/audioTest', upload.single("file"), async (req, res) => {
         }
         
         let finalResponse;
-        let user_contest = "學生音檔為```user_audio/" + file.filename + "```";
+        let user_contest = "原本的句子為" + inputText + "使用者音檔為```user_audio/" + file.filename + "```";
         let messages: ChatCompletionMessageParam[] = [
-            { role: "system", content: "你是一個英文老師，可以根據需求使用多種工具（文法檢查、句子比較等等）幫助學生。" },
+            { role: "system", content: "你是一個英文口說老師，可以根據需求使用多種工具（文法檢查、句子比較等等）幫助使用者改善英文口說。" },
             { role: "user", content: user_contest }
           ];
         
@@ -91,17 +92,17 @@ router.post('/audioTest', upload.single("file"), async (req, res) => {
               name: funcCall.name,
               content: JSON.stringify(mcpResults)
             });
-            continue; // loop 繼續下一輪
+            continue;
           }
-        
+          
           // 🔚 GPT 回完最終回答
           messages.push(message);
           // 加入最後要總結的任務說明
           messages.push({
               role: "user",
-              content: "請根據以上所有工具分析結果與對話，使用繁體中文做出整理與建議，並用 JSON 格式輸出。"
+              content: "請根據以上資料，使用繁體中文整理學生的表現，不要將原本因該是英文的部分翻成中文，並提供清楚的建議。輸出請使用 JSON 格式，包含以下欄位：spoken_text(學生實際說出的英文句子), compare_result(比較後的結), correction(建議修正的地方), accuracy(準確度百分比), suggestion(給學生的學習建議),請生成對應 JSON 格式的分析。"
           });
-          
+          console.log(messages);
           // 呼叫最後總結
           finalResponse = await openai.chat.completions.create({
               model: "gpt-4",
@@ -109,8 +110,23 @@ router.post('/audioTest', upload.single("file"), async (req, res) => {
           });
           break;
         }
+        const rawMessage = finalResponse.choices[0].message;
+        console.log("🎉 最終回應:", rawMessage);
+
+        // 嘗試解析 content
+        let parsedContent = {};
+        try {
+          const cleaned = rawMessage.content
+            ?.replace(/```json\s*|\s*```/g, '')
+            .trim();
         
-        res.json({ reply: finalResponse.choices[0].message });
+          parsedContent = JSON.parse(cleaned || '{}');
+        } catch (e) {
+          console.error('❌ 無法解析 content 字串:', rawMessage.content);
+        }
+        fs.unlinkSync(file.path); // 刪除上傳的音檔
+        console.log(parsedContent);
+        res.json(parsedContent);
     } catch (error) {
         console.error("❌ 音檔處理失敗:", error);
         res.status(500).json({ error: "音檔處理發生錯誤" });

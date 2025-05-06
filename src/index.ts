@@ -4,7 +4,6 @@ import dotenv from "dotenv";
 //router
 import gptRoutes from "./routes/gptTranslate";
 //import whisperRoutes from "./routes/whisperRoutes";
-//import wordCompareRoutes from "./routes/wordCompare";
 import textToSpeachRoutes from "./routes/textToSpeach";
 //import audioToGptRoutes from "./routes/audioToGptRoutes";
 import agentRoutes from "./routes/agent";
