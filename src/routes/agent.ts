@@ -100,7 +100,7 @@ router.post('/audioTest', upload.single("file"), async (req, res) => {
           // 加入最後要總結的任務說明
           messages.push({
               role: "user",
-              content: "請根據以上資料，使用繁體中文整理學生的表現，不要將原本因該是英文的部分翻成中文，並提供清楚的建議。輸出請使用 JSON 格式，包含以下欄位：spoken_text(學生實際說出的英文句子), compare_result(比較後的結), correction(建議修正的地方), accuracy(準確度百分比), suggestion(給學生的學習建議),請生成對應 JSON 格式的分析。"
+              content: "請根據以上資料，使用繁體中文整理學生的表現，不要將原本因該是英文的部分翻成中文，並提供清楚的建議。輸出請使用 JSON 格式，包含以下欄位：spoken_text(學生實際說出的英文句子), compare_result(比較後的結), correction(建議修正的地方), accuracy(準確度百分比), suggestion(給學生的學習建議，如果錯誤率太高，告訴他重新練習),請生成對應 JSON 格式的分析。"
           });
           console.log(messages);
           // 呼叫最後總結
