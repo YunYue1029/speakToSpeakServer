@@ -27,7 +27,7 @@ app.use("/api/gptTranslate", gptRoutes);
 app.use("/api/TTS", textToSpeachRoutes);
 //app.use("/api/audioToGpt", audioToGptRoutes);
 app.use("/api/agent", agentRoutes);
-app.use("/api/setPDF", setPDF);
+//app.use("/api/setPDF", setPDF);
 
 if (process.env.NODE_ENV !== "test") {
   app.listen(PORT, () => {

@@ -14,30 +14,40 @@ const openai = new OpenAI({
 
 router.post("/textToSpeach", async (req, res) => {
     try {
-        const { text, speed } = req.body;
-        console.log("🔄 正在轉換文字為語音...");
-    
-        const ttsResponse = await openai.audio.speech.create({
-          model: "tts-1",
-          voice: "alloy",
-          input: text,
-        });
-    
-        const audioBuffer = Buffer.from(await ttsResponse.arrayBuffer());
-        const filePath = path.join(__dirname, `../../outputV/output-${Date.now()}.mp3`);
-    
-        fs.writeFileSync(filePath, audioBuffer);
-        console.log(`✅ 語音檔案已生成：${filePath}`);
-        res.status(200).json({ url: filePath });
-      } catch (error) {
-        console.error("❌ TTS 轉換失敗:", error);
-        res.status(500).json({ error: "TTS 轉換失敗" });
+      const { text, speed } = req.body;
+
+      if(text === undefined || text === null) {
+        res.status(400).json({ error: "請提供文字" });
+        return;
       }
+      console.log("🔄 正在轉換文字為語音...");
+  
+      const ttsResponse = await openai.audio.speech.create({
+        model: "tts-1",
+        voice: "alloy",
+        input: text,
+      });
+  
+      const audioBuffer = Buffer.from(await ttsResponse.arrayBuffer());
+      const filePath = path.join(__dirname, `../../outputV/output-${Date.now()}.mp3`);
+  
+      fs.writeFileSync(filePath, audioBuffer);
+      console.log(`✅ 語音檔案已生成：${filePath}`);
+      res.status(200).json({ url: filePath });
+    } catch (error) {
+      console.error("❌ TTS 轉換失敗:", error);
+      res.status(500).json({ error: "TTS 轉換失敗" });
+    }
 });
 
 router.post("/textToSpeachSlower", async (req, res) => {
   try {
     const { text } = req.body;
+
+    if(text === undefined || text === null) {
+      res.status(400).json({ error: "請提供文字" });
+      return;
+    }
     console.log("🔄 正在轉換文字為語音...");
 
     const ttsResponse = await openai.audio.speech.create({
