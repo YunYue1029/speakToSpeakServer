@@ -16,7 +16,10 @@ router.get("/", async (req, res) => {
 router.post("/translateToEnglish", async (req, res) => {
   try {
     const chineseSpeech = req.body.chineseSpeech;
-    const prompt = "請將以下中文演講稿翻譯成英文，風格口語化、自然流暢，適合在報告中口說使用，不要過於書面化。可以根據英文語感略作調整，使內容在英文中聽起來更順暢。整體長度控制在 90 秒內，不需要加上說明或結尾，只輸出翻譯後的英文講稿即可。以下是中文稿：「"+ chineseSpeech +"」";
+    const prompt = "請將以下中文演講稿翻譯成英文，風格口語化、自然流暢，適合在報告中口說使用，不要過於書面化。"+
+                   "可以根據英文語感略作調整，使內容在英文中聽起來更順暢。整體長度控制在 90 秒內。"+
+                   "不需要加上說明或結尾，不要擴展句子，只輸出翻譯後的英文講稿即可，並且一個大段落就以兩個換行分開。"+
+                   "以下是中文稿：「"+ chineseSpeech +"」";
 
     const response = await openai.chat.completions.create({
       model: "gpt-4o-mini",

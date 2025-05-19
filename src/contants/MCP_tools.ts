@@ -14,7 +14,7 @@ export const functions = [
       }
     },
     {
-      name: "compareSentence",
+      name: "compare_sentence_levenshtein",
       description: "比較學生口說與正確句子的差異",
       parameters: {
         type: "object",

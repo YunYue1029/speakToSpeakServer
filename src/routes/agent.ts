@@ -58,10 +58,11 @@ router.post('/audioTest', upload.single("file"), async (req, res) => {
           
         while (true) {
           const response = await openai.chat.completions.create({
-            model: "gpt-4",
+            model: "gpt-4o-mini",
             messages,
             functions,
-            function_call: "auto"
+            function_call: "auto",
+            temperature: 0.5,
           });
         
           const choice = response.choices[0];
@@ -80,8 +81,6 @@ router.post('/audioTest', upload.single("file"), async (req, res) => {
                 }
               ]
             };
-        
-            // 🔁 呼叫 MCP 拿結果
             const mcpRes = await axios.post('http://localhost:8000/run', mcpPayload);
             const mcpResults = (mcpRes.data as { results: any[] }).results;
         
@@ -95,18 +94,19 @@ router.post('/audioTest', upload.single("file"), async (req, res) => {
             continue;
           }
           
-          // 🔚 GPT 回完最終回答
           messages.push(message);
-          // 加入最後要總結的任務說明
           messages.push({
               role: "user",
-              content: "請根據以上資料，使用繁體中文整理學生的表現，不要將原本因該是英文的部分翻成中文，並提供清楚的建議。輸出請使用 JSON 格式，包含以下欄位：spoken_text(學生實際說出的英文句子), compare_result(比較後的結), correction(建議修正的地方), accuracy(準確度百分比), suggestion(給學生的學習建議，如果錯誤率太高，告訴他重新練習),請生成對應 JSON 格式的分析。"
+              content: "請根據以上資料，使用繁體中文整理學生的表現，不要將原本因該是英文的部分翻成中文，並提供清楚的建議。"+
+                       "輸出請使用 JSON 格式，包含以下欄位：spoken_text(學生實際說出的英文句子), differences(提供difference中被替換成的字，並且為小寫字母，回傳為一個字串陣列), accuracy(準確度百分比), suggestion(給學生的繁體中文學習建議，如果錯誤率太高，直接告訴他重新練習)。"+
+                       "請生成對應 JSON 格式的分析。"
           });
           console.log(messages);
           // 呼叫最後總結
           finalResponse = await openai.chat.completions.create({
-              model: "gpt-4",
-              messages
+              model: "gpt-4o-mini",
+              messages,
+              temperature: 0.5,
           });
           break;
         }
