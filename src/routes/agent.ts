@@ -98,7 +98,11 @@ router.post('/audioTest', upload.single("file"), async (req, res) => {
           messages.push({
               role: "user",
               content: "請根據以上資料，使用繁體中文整理學生的表現，不要將原本因該是英文的部分翻成中文，並提供清楚的建議。"+
-                       "輸出請使用 JSON 格式，包含以下欄位：spoken_text(學生實際說出的英文句子), differences(提供difference中被替換成的字，並且為小寫字母，回傳為一個字串陣列), accuracy(準確度百分比), suggestion(給學生的繁體中文學習建議，如果錯誤率太高，直接告訴他重新練習)。"+
+                       "輸出請使用 JSON 格式，包含以下欄位：" + 
+                       "spoken_text(學生實際說出的英文句子), " +
+                       "differences(只提供原文中錯誤的地方，並且為小寫字母，回傳為一個字串陣列，例如：['錯誤1', '錯誤2']), " +
+                       "accuracy(準確度百分比), " +
+                       "suggestion(給學生的繁體中文學習建議，如果錯誤率太高，直接告訴他重新練習)。"+
                        "請生成對應 JSON 格式的分析。"
           });
           console.log(messages);

@@ -2,12 +2,12 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 //router
-import gptRoutes from "./routes/gptTranslate";
-//import whisperRoutes from "./routes/whisperRoutes";
 import textToSpeachRoutes from "./routes/textToSpeach";
-//import audioToGptRoutes from "./routes/audioToGptRoutes";
+import gptRoutes from "./routes/gptTranslate";
 import agentRoutes from "./routes/agent";
-import setPDF from "./routes/setPDF";
+//import whisperRoutes from "./routes/whisperRoutes";
+//import audioToGptRoutes from "./routes/audioToGptRoutes";
+//import setPDF from "./routes/setPDF";
 
 dotenv.config();
 
@@ -22,12 +22,12 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/gptTranslate", gptRoutes);
+app.use("/api/agent", agentRoutes);
+app.use("/api/TTS", textToSpeachRoutes);
 //app.use("/api/whisper", whisperRoutes);
 //app.use("/api/wordCompare", wordCompareRoutes);
-app.use("/api/TTS", textToSpeachRoutes);
-//app.use("/api/audioToGpt", audioToGptRoutes);
-app.use("/api/agent", agentRoutes);
 //app.use("/api/setPDF", setPDF);
+//app.use("/api/audioToGpt", audioToGptRoutes);
 
 if (process.env.NODE_ENV !== "test") {
   app.listen(PORT, () => {

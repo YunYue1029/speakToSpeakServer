@@ -36,7 +36,6 @@ describe("TTS 語音轉換測試", () => {
     expect(res.header["content-disposition"]).toContain("speech.mp3");
     expect(res.body).toBeInstanceOf(Buffer);
 
-    // 因為 Slower 是用 Buffer 回傳，要根據 output 檔案命名格式主動推測要刪哪個
     const outputDir = path.join(__dirname, "../../outputV");
     const files = fs.readdirSync(outputDir)
       .filter(name => name.includes("-slow.mp3") || name.includes("output-"))
