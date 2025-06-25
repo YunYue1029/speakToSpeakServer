@@ -136,7 +136,7 @@ router.post('/audioTest', upload.single("file"), async (req, res) => {
     }
 });
 
-router.post('/agent_test', async (req, res) => {
+router.post('/rehearsals_agent', async (req, res) => {
    try {
         const file = req.file;
         const inputText = req.body.inputText;
@@ -223,7 +223,7 @@ router.post('/agent_test', async (req, res) => {
         } catch (e) {
           console.error('❌ 無法解析 content 字串:', rawMessage.content);
         }
-        fs.unlinkSync(file.path); // 刪除上傳的音檔
+        fs.unlinkSync(file.path);
         res.json(parsedContent);
     } catch (error) {
         console.error("❌ 音檔處理失敗:", error);
